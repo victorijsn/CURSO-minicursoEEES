@@ -1,21 +1,93 @@
 ---
-title: "Introdução ao R - para séries temporais"
-author: "Victor"
-date: "`r Sys.Date()`"
+title: "Introdução a manipulação de dados no R"
+subtitle: "VIII Encontro de Economia do Espírito Santo"
+author: "Victor Nunes Toscano"
+institute: "RStudio, PBC"
+date: "10/11/2021"
 output:
-  prettydoc::html_pretty:
-    theme: architect
-    highlight: github
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
 ---
-
-```{r global}
-
-
-
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
 ```
 
+---
+# Objetivo
+Manipular as séries que serão utilizadas na apresentação dos modelos de previsão.
 
-## Objetivos
+
+## Roteiro
+1. Requisitos
+2. Sobre a base de dados
+3. Arrumando a base de dados (passo a passo)
+  + Importar
+  + Manipular
+  + Exportar
+4. Visualizando
+5. Criando o objeto de série temporal (base)
+
+
+---
+# Requisitos
+
+
+---
+# A base de dados
+
+Nossa fonte de dados é o arquivo compilado pelo [Instituto Jones dos Santos Neves](http://ijsn.es.gov.br/) (IJSN) sobre o desempenho do setor de Serviços. A fonte principal é a Pesquisa Mensal de Serviços (PMS) publicada pelo [Instituto Brasileiro de Geografia e Estatística](https://sidra.ibge.gov.br/pesquisa/pms/tabelas) (IBGE).
+
+Faça o download da base de dados [aqui](http://ijsn.es.gov.br/component/attachments/download/7576).
+
+---
+# A base de dados 
+
+A **Pesquisa Mensal de Serviços** - PMS tem como objetivo produzir indicadores que permitam acompanhar o comportamento conjuntural dos principais segmentos empresariais não-financeiros do setor de serviços, excluindo-se os da saúde e da educação, complementando, através da análise de curto prazo, o mapeamento da estrutura das atividades de serviços no País, efetuado pela Pesquisa Anual de Serviços - PAS. Assim, a uma pesquisa de caráter anual e estrutural, vem se juntar outra de caráter conjuntural, imprescindível para o estudo das variações cíclicas do setor de serviços.
+
+
+---
+# A base de dados
+## Resultado
+
+
+---
+# A base de dados
+## Arrumando a base de dados
 
 
 
+---
+# A base de dados
+## Arrumando a base de dados
+
+
+---
+# A base de dados
+## Arrumando a base de dados
+
+
+---
+# A base de dados
+## Arrumando a base de dados
+
+
+---
+# A base de dados
+## Visualizando
+
+
+---
+# Objeto de série temporal
+
+
+---
+
+class: center, middle
+
+# Obrigado!
+
+Slides criados pelo pacote R [**xaringan**](https://github.com/yihui/xaringan).
