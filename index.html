@@ -16,7 +16,7 @@ class: center, middle, inverse, title-slide
 # Introdução a manipulação de dados no R
 ## VIII Encontro de Economia do Espírito Santo
 ### Victor Nunes Toscano
-### RStudio, PBC
+### SETADES
 ### 10/11/2021
 
 ---
@@ -41,6 +41,26 @@ Manipular as séries que serão utilizadas na apresentação dos modelos de prev
 
 ---
 # Requisitos
+- R instalado - [LINK](https://cran.r-project.org/)
+- RStudio instalado - [LINK](https://www.rstudio.com/products/rstudio/download/)
+
+### Pacotes utilizados
+
+```r
+# install.packages("dplyr")
+# install.packages("tidyr")
+# install.packages("janitor")
+# install.packages("lubridate")
+# install.packages("ggplot2")
+# install.packages("readxl")
+
+library(dplyr) # manipulação de base de dados 
+library(tidyr) # ferramenta de faxina de dados
+library(janitor) # ferramenta para faxina de dados
+library(lubridate) # pacote para lidar com datas
+library(ggplot2) # pacote de visualização
+library(readxl) # pacote para importar dados do Excel
+```
 
 
 ---
@@ -55,15 +75,56 @@ Faça o download da base de dados [aqui](http://ijsn.es.gov.br/component/attachm
 
 A **Pesquisa Mensal de Serviços** - PMS tem como objetivo produzir indicadores que permitam acompanhar o comportamento conjuntural dos principais segmentos empresariais não-financeiros do setor de serviços, excluindo-se os da saúde e da educação, complementando, através da análise de curto prazo, o mapeamento da estrutura das atividades de serviços no País, efetuado pela Pesquisa Anual de Serviços - PAS. Assim, a uma pesquisa de caráter anual e estrutural, vem se juntar outra de caráter conjuntural, imprescindível para o estudo das variações cíclicas do setor de serviços.
 
+## Importando
+Vamos olhar para a base de dados primeiro.
+
+
+```r
+dados &lt;- readxl::read_xlsx("./bases/07_2021_PMS-78.xlsx", sheet = "Tabela 6442", skip = 2)
+dados &lt;- janitor::clean_names(dados) # para padronizar os nomes de variáveis
+```
+
 
 ---
 # A base de dados
 ## Resultado
 
+```r
+glimpse(dados) #comando para ver a estrutura da base de dados
+```
+
+```
+## Rows: 7,112
+## Columns: 11
+## $ mes                                                                     &lt;chr&gt; …
+## $ unidade_territorial                                                     &lt;chr&gt; …
+## $ variavel                                                                &lt;chr&gt; …
+## $ indice_base_fixa_2014_100_numero_indice                                 &lt;dbl&gt; …
+## $ indice_base_fixa_com_ajuste_sazonal_2014_100_numero_indice              &lt;dbl&gt; …
+## $ variacao_mes_mes_anterior_com_ajuste_sazonal_percentual                 &lt;chr&gt; …
+## $ variacao_mensal_base_igual_mes_do_ano_anterior_percentual               &lt;chr&gt; …
+## $ variacao_acumulada_no_ano_base_igual_periodo_do_ano_anterior_percentual &lt;chr&gt; …
+## $ variacao_acumulada_de_12_meses_percentual                               &lt;chr&gt; …
+## $ variacao_trimestral_movel_percentual                                    &lt;chr&gt; …
+## $ variacao_trimestral_movel_com_ajuste_sazonal_percentual                 &lt;chr&gt; …
+```
 
 ---
 # A base de dados
 ## Arrumando a base de dados
+Para arrumarmos a base de dados os dados as linhas devem representar um período de tempo, ao passo em que as colunas representam os valores da variável ao longo do tempo. A base de dados não está estruturada dessa maneira. Por isso, vamos aplicar uma sequência de comandos para gerar uma base de dados "arrumada" para nossa análise.
+
+Vamos focar nossa análise nas séries em nível (número índice) do Brasil e Espírito Santo, pois delas, podemos gerar diversas transformações posteriormente.
+
+
+```r
+dados_tidy &lt;- dados %&gt;%
+  fill(mes, unidade_territorial) %&gt;%
+  select(mes, unidade_territorial, variavel,
+         indice_base_fixa_2014_100_numero_indice,
+         indice_base_fixa_com_ajuste_sazonal_2014_100_numero_indice)
+```
+
 
 
 
