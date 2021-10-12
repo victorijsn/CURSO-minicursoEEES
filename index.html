@@ -23,6 +23,8 @@ class: center, middle, inverse, title-slide
 
 
 
+# Sobre mim
+
 ---
 # Objetivo
 Manipular as séries que serão utilizadas na apresentação dos modelos de previsão.
@@ -52,6 +54,7 @@ Manipular as séries que serão utilizadas na apresentação dos modelos de prev
 # install.packages("janitor")
 # install.packages("lubridate")
 # install.packages("ggplot2")
+# install.packages("patchwork")
 # install.packages("readxl")
 
 library(dplyr) # manipulação de base de dados 
@@ -59,6 +62,7 @@ library(tidyr) # ferramenta de faxina de dados
 library(janitor) # ferramenta para faxina de dados
 library(lubridate) # pacote para lidar com datas
 library(ggplot2) # pacote de visualização
+library(patchwork) # pacote compor gráficos
 library(readxl) # pacote para importar dados do Excel
 ```
 
@@ -114,7 +118,7 @@ glimpse(dados) #comando para ver a estrutura da base de dados
 ## Arrumando a base de dados
 Para arrumarmos a base de dados os dados as linhas devem representar um período de tempo, ao passo em que as colunas representam os valores da variável ao longo do tempo. A base de dados não está estruturada dessa maneira. Por isso, vamos aplicar uma sequência de comandos para gerar uma base de dados "arrumada" para nossa análise.
 
-Vamos focar nossa análise nas séries em nível (número índice) do Brasil e Espírito Santo, pois delas, podemos gerar diversas transformações posteriormente.
+Vamos focar nossa análise nas séries em nível (número índice) do Brasil e Espírito Santo, pois delas, podemos gerar diversas transformações posteriormente. Os comandos a seguir são cumulativos para gerar nossa base de dados. Copie e cole o comando em um script dentro do Rstudio.
 
 
 ```r
@@ -125,33 +129,255 @@ dados_tidy &lt;- dados %&gt;%
          indice_base_fixa_com_ajuste_sazonal_2014_100_numero_indice)
 ```
 
-
-
-
 ---
 # A base de dados
 ## Arrumando a base de dados
 
+```r
+glimpse(dados_tidy)
+```
+
+```
+## Rows: 7,112
+## Columns: 5
+## $ mes                                                        &lt;chr&gt; "janeiro 20…
+## $ unidade_territorial                                        &lt;chr&gt; "Brasil", "…
+## $ variavel                                                   &lt;chr&gt; "Índice de …
+## $ indice_base_fixa_2014_100_numero_indice                    &lt;dbl&gt; 71.3, 83.8,…
+## $ indice_base_fixa_com_ajuste_sazonal_2014_100_numero_indice &lt;dbl&gt; 75.4, 88.5,…
+```
 
 ---
 # A base de dados
 ## Arrumando a base de dados
+Comando para renomeando as variáveis.
 
+```r
+dados_tidy &lt;- dados_tidy %&gt;% 
+  rename(indice_bf = indice_base_fixa_2014_100_numero_indice,
+         indice_bf_sa = indice_base_fixa_com_ajuste_sazonal_2014_100_numero_indice)
+glimpse(dados_tidy)
+```
+
+```
+## Rows: 7,112
+## Columns: 5
+## $ mes                 &lt;chr&gt; "janeiro 2011", "janeiro 2011", "janeiro 2011", "j…
+## $ unidade_territorial &lt;chr&gt; "Brasil", "Brasil", "Rondônia", "Rondônia", "Acre"…
+## $ variavel            &lt;chr&gt; "Índice de receita nominal de serviços", "Índice d…
+## $ indice_bf           &lt;dbl&gt; 71.3, 83.8, 70.7, 83.3, 72.7, 83.4, 67.1, 81.2, 72…
+## $ indice_bf_sa        &lt;dbl&gt; 75.4, 88.5, 71.1, 85.0, 78.6, 90.2, 72.2, 87.3, 76…
+```
+---
+# A base de dados
+## Arrumando a base de dados
+Simplificar os nomes dos índices e das unidades territoriais.
+
+```r
+dados_tidy &lt;- dados_tidy %&gt;% 
+  mutate(variavel = case_when(variavel=="Índice de receita nominal de serviços" ~ "receita",
+                              variavel=="Índice de volume de serviços" ~ "volume"),
+         unidade_territorial = case_when(unidade_territorial=="Brasil" ~ "BR",
+                                         unidade_territorial=="Espírito Santo" ~ "ES")) %&gt;% 
+  filter(unidade_territorial %in% c("BR", "ES"))
+head(dados_tidy,3)
+```
+
+```
+## # A tibble: 3 × 5
+##   mes          unidade_territorial variavel indice_bf indice_bf_sa
+##   &lt;chr&gt;        &lt;chr&gt;               &lt;chr&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+## 1 janeiro 2011 BR                  receita       71.3         75.4
+## 2 janeiro 2011 BR                  volume        83.8         88.5
+## 3 janeiro 2011 ES                  receita       75.9         79
+```
 
 ---
 # A base de dados
 ## Arrumando a base de dados
+transformar as informações contidas nas linhas em parte das colunas. Como são duas informações de linha *variavel* e *unidade_territorial* e duas informações de coluna *indica_bf* e *indice_bf_sa*, serão as duas colunas se transformarão em oito.
 
+```r
+dados_tidy &lt;- dados_tidy %&gt;% 
+  pivot_wider(names_from = c(variavel, unidade_territorial),
+              names_sep = "_",
+              values_from = c(indice_bf, indice_bf_sa))
+```
 
 ---
 # A base de dados
-## Visualizando
+## Arrumando a base de dados
+Veja como ficou:
+
+```r
+glimpse(dados_tidy)
+```
+
+```
+## Rows: 127
+## Columns: 9
+## $ mes                     &lt;chr&gt; "janeiro 2011", "fevereiro 2011", "março 2011"…
+## $ indice_bf_receita_BR    &lt;dbl&gt; 71.3, 71.3, 76.2, 75.5, 78.1, 78.0, 79.9, 81.7…
+## $ indice_bf_volume_BR     &lt;dbl&gt; 83.8, 83.3, 87.5, 86.7, 89.8, 89.0, 90.7, 92.8…
+## $ indice_bf_receita_ES    &lt;dbl&gt; 75.9, 74.5, 80.4, 80.7, 82.4, 83.8, 86.3, 89.0…
+## $ indice_bf_volume_ES     &lt;dbl&gt; 90.1, 88.2, 93.7, 94.1, 96.0, 96.7, 99.3, 102.…
+## $ indice_bf_sa_receita_BR &lt;dbl&gt; 75.4, 76.2, 76.5, 77.5, 78.4, 79.1, 80.0, 80.5…
+## $ indice_bf_sa_volume_BR  &lt;dbl&gt; 88.5, 88.7, 88.5, 89.0, 89.6, 89.8, 90.5, 90.9…
+## $ indice_bf_sa_receita_ES &lt;dbl&gt; 79.0, 79.5, 80.7, 82.5, 82.4, 85.4, 86.4, 87.0…
+## $ indice_bf_sa_volume_ES  &lt;dbl&gt; 94.7, 94.3, 95.6, 95.9, 95.5, 99.0, 99.3, 99.4…
+```
+
+---
+# A base de dados
+## Arrumando a base de dados
+Estamos quase terminando, vamos agora criar uma sequência de datas para utilizarmos no código.
+
+```r
+dados_tidy &lt;- dados_tidy %&gt;%
+  mutate(data_mes=seq(from=as.Date("2011-01-01"), to=as.Date("2021-07-01"), by="month")) %&gt;%
+  relocate(data_mes, .before = mes) %&gt;% select(-mes) %&gt;% glimpse()
+```
+
+```
+## Rows: 127
+## Columns: 9
+## $ data_mes                &lt;date&gt; 2011-01-01, 2011-02-01, 2011-03-01, 2011-04-0…
+## $ indice_bf_receita_BR    &lt;dbl&gt; 71.3, 71.3, 76.2, 75.5, 78.1, 78.0, 79.9, 81.7…
+## $ indice_bf_volume_BR     &lt;dbl&gt; 83.8, 83.3, 87.5, 86.7, 89.8, 89.0, 90.7, 92.8…
+## $ indice_bf_receita_ES    &lt;dbl&gt; 75.9, 74.5, 80.4, 80.7, 82.4, 83.8, 86.3, 89.0…
+## $ indice_bf_volume_ES     &lt;dbl&gt; 90.1, 88.2, 93.7, 94.1, 96.0, 96.7, 99.3, 102.…
+## $ indice_bf_sa_receita_BR &lt;dbl&gt; 75.4, 76.2, 76.5, 77.5, 78.4, 79.1, 80.0, 80.5…
+## $ indice_bf_sa_volume_BR  &lt;dbl&gt; 88.5, 88.7, 88.5, 89.0, 89.6, 89.8, 90.5, 90.9…
+## $ indice_bf_sa_receita_ES &lt;dbl&gt; 79.0, 79.5, 80.7, 82.5, 82.4, 85.4, 86.4, 87.0…
+## $ indice_bf_sa_volume_ES  &lt;dbl&gt; 94.7, 94.3, 95.6, 95.9, 95.5, 99.0, 99.3, 99.4…
+```
+
+---
+# A base de dados
+## Código completo
+
+```r
+dados_tidy &lt;- dados %&gt;%
+  fill(mes, unidade_territorial) %&gt;%
+  select(mes, unidade_territorial, variavel,
+         indice_base_fixa_2014_100_numero_indice,
+         indice_base_fixa_com_ajuste_sazonal_2014_100_numero_indice) %&gt;%
+  rename(indice_bf = indice_base_fixa_2014_100_numero_indice,
+         indice_bf_sa = indice_base_fixa_com_ajuste_sazonal_2014_100_numero_indice) %&gt;%
+  mutate(variavel = case_when(variavel=="Índice de receita nominal de serviços" ~ "receita",
+                              variavel=="Índice de volume de serviços" ~ "volume"),
+         unidade_territorial = case_when(unidade_territorial=="Brasil" ~ "BR",
+                                         unidade_territorial=="Espírito Santo" ~ "ES")) %&gt;%
+  filter(unidade_territorial %in% c("BR", "ES")) %&gt;%
+  pivot_wider(names_from = c(variavel, unidade_territorial),
+              names_sep = "_",
+              values_from = c(indice_bf, indice_bf_sa)) %&gt;%
+  mutate(data_mes=seq(from=as.Date("2011-01-01"), to=as.Date("2021-07-01"), by="month")) %&gt;%
+  relocate(data_mes, .before = mes) %&gt;% select(-mes) %&gt;% arrange(data_mes)
+```
+
+---
+# A base de dados
+## Visualizando - estatísticas descritivas
+
+```r
+summary(dados_tidy$indice_bf_sa_volume_ES)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   73.80   84.20   89.30   91.06   99.20  109.30
+```
+
+
+```r
+summary(dados_tidy$indice_bf_sa_volume_BR)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   73.10   89.00   90.80   91.83   95.40  101.10
+```
+
+---
+# A base de dados
+## Visualizando - Gráficos
+
+Código para gerar os gráficos.
+
+```r
+g1 &lt;- ggplot(dados_tidy) +
+  aes(x = data_mes, y = indice_bf_sa_volume_BR) +
+  geom_line(size = 0.5, colour = "#112446") +
+  scale_y_continuous(breaks = seq(from = 70,to = 110,by = 10), limits = c(70,110))+
+  labs(title = "Brasil",
+       x = "",
+       y = "Número índice, base 2014=100")+
+  theme_minimal()
+
+g2 &lt;- ggplot(dados_tidy) +
+  aes(x = data_mes, y = indice_bf_sa_volume_ES) +
+  geom_line(size = 0.5, colour = "#112445") +
+  scale_y_continuous(breaks = seq(from = 70,to = 110,by = 10), limits = c(70,110))+
+  labs(title = "Espírito Santo",
+       x = "",
+       y = "")+
+  theme_minimal()
+```
+
+---
+# Os gráficos
+
+```r
+g1 + g2
+```
+
+![](index_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
 
 
 ---
 # Objeto de série temporal
+Para criar um objeto específico de série temporal temos o seguinte método:
 
 
+```r
+vol_serv_es_sa &lt;- ts(data = dados_tidy$indice_bf_sa_volume_ES, 
+                     start = c(2011,1), 
+                     frequency = 12)
+vol_serv_es_sa
+```
+
+```
+##        Jan   Feb   Mar   Apr   May   Jun   Jul   Aug   Sep   Oct   Nov   Dec
+## 2011  94.7  94.3  95.6  95.9  95.5  99.0  99.3  99.4  99.1  99.2  99.3 102.1
+## 2012 101.0  99.2  99.2  98.4  99.7 100.7  99.3 100.4  98.5 100.2  99.9  99.6
+## 2013  99.2 102.0 101.6 104.8 105.8 102.9 109.3 102.3 102.3 100.9  99.8  96.9
+## 2014 101.4 102.8 100.5 101.5  99.0  95.1  98.3  99.2 100.6 102.6 102.4  98.7
+## 2015  95.9  95.2  96.7  94.1  92.5  93.1  92.3  99.6  94.5  91.6  93.2  89.3
+## 2016  85.4  91.4  86.9  86.8  87.9  86.7  86.3  84.1  85.5  85.4  83.2  84.9
+## 2017  86.9  85.2  86.8  85.6  86.4  90.6  83.9  83.9  82.6  82.1  84.8  86.8
+## 2018  85.1  85.5  84.7  96.2  82.4  84.3  85.2  82.3  82.9  81.4  81.4  82.8
+## 2019  83.8  83.1  84.1  85.9  87.6  86.1  86.8  87.3  85.0  86.2  83.9  82.0
+## 2020  81.9  80.6  79.6  76.1  76.4  73.8  75.6  78.7  81.0  80.1  80.2  80.8
+## 2021  82.1  83.7  80.6  85.1  86.3  88.5  90.5
+```
+
+---
+# Objeto de série temporal
+Dica: ao utilizar o pacote *forecast*, vocês têm acesso a função *autoplot()* que facilita a visualização das séries de temporais.
+
+
+```r
+library(forecast)
+autoplot(vol_serv_es_sa)
+```
+
+![](index_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+
+---
+# Objeto de série temporal
+## Conclusões
+O objeto criado toma a forma de um vetor e pode ser utilizado independentemente de uma base de dados além de possuir funcionalidades específicas para análise de séries de tempo. Esse método vai ser muito útil para a segunda parte do curso.
 ---
 
 class: center, middle
