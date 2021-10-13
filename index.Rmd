@@ -21,10 +21,12 @@ options(htmltools.dir.version = FALSE)
 
 **Victor Nunes Toscano**
 
-Sou servidor público há mais de 10 anos, sempre trabalhando com análise de dados.
+Sou servidor público há mais de 10 anos, sempre trabalhando com análise de dados. Atualmente, estou na Secretaria de Trabalho, Assistência e Desenvolvimento Social (SETADES) e tenho trabalhado com dados sociais e avaliação de políticas públicas.
 
-Atualmente, estou na Secretaria de Trabalho, Assistência e Desenvolvimento Social (SETADES) e tenho trabalhado com dados sociais e avaliação de políticas públicas.
-![foto](https://lh5.googleusercontent.com/lk2OeiJqT1X3pAh46hVYibEzmiF5wU3yvJkok7GF5GGalmmwc1RAVLKLuw4zgdh9kfcT42tPUW7PL5PvMLGVihCY-k5XyJvfhIMDphwjCOUj_pa6bxh6r_blrQccwhfS7A=w1280)
+
+```{r, out.width = "180px", echo=FALSE}
+knitr::include_graphics("images/foto.jpeg")
+```
 
 [Meu site](https://sites.google.com/site/vntoscano)
 
@@ -194,6 +196,17 @@ dados_tidy <- dados %>%
   mutate(data_mes=seq(from=as.Date("2011-01-01"), to=as.Date("2021-07-01"), by="month")) %>%
   relocate(data_mes, .before = mes) %>% select(-mes) %>% arrange(data_mes)
 ```
+
+---
+# A base de dados
+## Exportar a base de dados
+```{r}
+write.csv2(dados_tidy, "bases/dados_tidy.csv")
+```
+A base de dados será salva no caminho indicado na função. Na maioria dos casos, essa função é suficiente para gerar um arquivo que o Excel é capaz de ler.
+
+Mas pode ser que seja necessário exportar em outros formatos. Para isso, sugiro a leitura deste capítulo [aqui](https://livro.curso-r.com/5-2-readr.html#escrevendo-arquivos-de-texto).
+
 
 ---
 # A base de dados

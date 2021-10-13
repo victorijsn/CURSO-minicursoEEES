@@ -25,6 +25,15 @@ class: center, middle, inverse, title-slide
 
 # Sobre mim
 
+**Victor Nunes Toscano**
+
+Sou servidor público há mais de 10 anos, sempre trabalhando com análise de dados. Atualmente, estou na Secretaria de Trabalho, Assistência e Desenvolvimento Social (SETADES) e tenho trabalhado com dados sociais e avaliação de políticas públicas.
+
+
+&lt;img src="images/foto.jpeg" width="180px" /&gt;
+
+[Meu site](https://sites.google.com/site/vntoscano)
+
 ---
 # Objetivo
 Manipular as séries que serão utilizadas na apresentação dos modelos de previsão.
@@ -58,7 +67,7 @@ Manipular as séries que serão utilizadas na apresentação dos modelos de prev
 # install.packages("readxl")
 
 library(dplyr) # manipulação de base de dados 
-library(tidyr) # ferramenta para arrumar os dados
+library(tidyr) # ferramenta para arrumar dados
 library(janitor) # ferramenta para faxina de dados
 library(lubridate) # pacote para lidar com datas
 library(ggplot2) # pacote de visualização
@@ -116,7 +125,7 @@ glimpse(dados) #comando para ver a estrutura da base de dados
 ---
 # A base de dados
 ## Arrumando a base de dados
-Para arrumarmos a base de dados os dados as linhas devem representar um período de tempo, ao passo em que as colunas representam os valores da variável ao longo do tempo. A base de dados não está estruturada dessa maneira. Por isso, vamos aplicar uma sequência de comandos para gerar uma base de dados "arrumada" para nossa análise.
+Para arrumarmos a base de dados, as linhas devem representar um período de tempo, ao passo em que as colunas representam os valores da variável ao longo do tempo. A base de dados não está estruturada dessa maneira. Por isso, vamos aplicar uma sequência de comandos para gerar uma base de dados "arrumada" para nossa análise.
 
 Vamos focar nossa análise nas séries em nível (número índice) do Brasil e Espírito Santo, pois delas, podemos gerar diversas transformações posteriormente. Os comandos a seguir são cumulativos para gerar nossa base de dados. Copie e cole o comando em um script dentro do Rstudio.
 
@@ -134,7 +143,7 @@ dados_tidy &lt;- dados %&gt;%
 ## Arrumando a base de dados
 
 ```r
-glimpse(dados_tidy)
+glimpse(dados_tidy) # Comando para verificar a estrutura dos dados.
 ```
 
 ```
@@ -195,7 +204,7 @@ head(dados_tidy,3)
 ---
 # A base de dados
 ## Arrumando a base de dados
-Vamos transformar as informações contidas nas linhas em colunas. Como são duas informações em cada linha das colunas *variavel* e *unidade_territorial* e duas informações de coluna *indica_bf* e *indice_bf_sa*, serão combinadas com as duas colunas de índices.
+Vamos transformar as informações contidas nas linhas em colunas. Como são duas informações em cada linha das colunas variavel e unidade_territorial e duas informações de coluna *indica_bf* e *indice_bf_sa*, serão combinadas com as duas colunas de índices.
 
 ```r
 dados_tidy &lt;- dados_tidy %&gt;% 
@@ -208,6 +217,7 @@ dados_tidy &lt;- dados_tidy %&gt;%
 # A base de dados
 ## Arrumando a base de dados
 Veja como ficou:
+
 ```r
 glimpse(dados_tidy)
 ```
@@ -277,6 +287,18 @@ dados_tidy &lt;- dados %&gt;%
 
 ---
 # A base de dados
+## Exportar a base de dados
+
+```r
+write.csv2(dados_tidy, "bases/dados_tidy.csv")
+```
+A base de dados será salva no caminho indicado na função. Na maioria dos casos, essa função é suficiente para gerar um arquivo que o Excel é capaz de ler.
+
+Mas pode ser que seja necessário exportar em outros formatos. Para isso, sugiro a leitura deste capítulo [aqui](https://livro.curso-r.com/5-2-readr.html#escrevendo-arquivos-de-texto).
+
+
+---
+# A base de dados
 ## Visualizando - estatísticas descritivas
 
 ```r
@@ -328,10 +350,10 @@ g2 &lt;- ggplot(dados_tidy) +
 # Os gráficos
 
 ```r
-g1 + g2
+g1 + g2 # Com o pacote patchwork podemos combinar os gráficos dessa forma.
 ```
 
-![](index_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -371,7 +393,7 @@ library(forecast)
 autoplot(vol_serv_es_sa)
 ```
 
-![](index_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
 
 ---
 # Objeto de série temporal
@@ -382,7 +404,7 @@ O objeto criado toma a forma de um vetor e pode ser utilizado independentemente 
 class: center, middle
 
 # Obrigado!
-
+Victor Nunes Toscano
 Slides criados pelo pacote R [**xaringan**](https://github.com/yihui/xaringan).
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
