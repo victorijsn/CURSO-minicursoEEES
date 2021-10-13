@@ -280,5 +280,7 @@ O objeto criado toma a forma de um vetor e pode ser utilizado independentemente 
 class: center, middle
 
 # Obrigado!
+
 Victor Nunes Toscano
+
 Slides criados pelo pacote R [**xaringan**](https://github.com/yihui/xaringan).
