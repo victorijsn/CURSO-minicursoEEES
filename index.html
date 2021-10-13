@@ -195,7 +195,7 @@ head(dados_tidy,3)
 ---
 # A base de dados
 ## Arrumando a base de dados
-Vamos transformar as informações contidas nas linhas em parte das colunas. Como são duas informações de linha *variavel* e *unidade_territorial* e duas informações de coluna *indica_bf* e *indice_bf_sa*, as duas colunas se transformarão em oito.
+Vamos transformar as informações contidas nas linhas em colunas. Como são duas informações em cada linha das colunas *variavel* e *unidade_territorial* e duas informações de coluna *indica_bf* e *indice_bf_sa*, serão combinadas com as duas colunas de índices.
 
 ```r
 dados_tidy &lt;- dados_tidy %&gt;% 
@@ -208,7 +208,6 @@ dados_tidy &lt;- dados_tidy %&gt;%
 # A base de dados
 ## Arrumando a base de dados
 Veja como ficou:
-
 ```r
 glimpse(dados_tidy)
 ```
