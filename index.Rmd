@@ -19,6 +19,15 @@ options(htmltools.dir.version = FALSE)
 
 # Sobre mim
 
+**Victor Nunes Toscano**
+
+Sou servidor público há mais de 10 anos, sempre trabalhando com a análise de dados.
+
+Atualmente, estou na Secretaria de Trabalho, Assistência e Desenvolvimento Social (SETADES) e tenho trabalhado com dados sociais e avaliação de políticas públicas.
+![foto](https://lh5.googleusercontent.com/lk2OeiJqT1X3pAh46hVYibEzmiF5wU3yvJkok7GF5GGalmmwc1RAVLKLuw4zgdh9kfcT42tPUW7PL5PvMLGVihCY-k5XyJvfhIMDphwjCOUj_pa6bxh6r_blrQccwhfS7A=w1280)
+
+[Meu site](https://sites.google.com/site/vntoscano)
+
 ---
 # Objetivo
 Manipular as séries que serão utilizadas na apresentação dos modelos de previsão.
@@ -65,7 +74,7 @@ library(readxl) # pacote para importar dados do Excel
 
 Nossa fonte de dados é o arquivo compilado pelo [Instituto Jones dos Santos Neves](http://ijsn.es.gov.br/) (IJSN) sobre o desempenho do setor de Serviços. A fonte principal é a Pesquisa Mensal de Serviços (PMS) publicada pelo [Instituto Brasileiro de Geografia e Estatística](https://sidra.ibge.gov.br/pesquisa/pms/tabelas) (IBGE).
 
-Faça o download da base de dados [aqui](http://ijsn.es.gov.br/component/attachments/download/7576).
+Faça o download da base de dados [aqui](http://ijsn.es.gov.br/artigos/6002-servicos-julho-de-2021?highlight=WyJzZXJ2aVx1MDBlN29zIiwic2VydmlcdTAwZTdvcycsIl0=).
 
 ---
 # A base de dados 
@@ -91,7 +100,7 @@ glimpse(dados) #comando para ver a estrutura da base de dados
 ---
 # A base de dados
 ## Arrumando a base de dados
-Para arrumarmos a base de dados os dados as linhas devem representar um período de tempo, ao passo em que as colunas representam os valores da variável ao longo do tempo. A base de dados não está estruturada dessa maneira. Por isso, vamos aplicar uma sequência de comandos para gerar uma base de dados "arrumada" para nossa análise.
+Para arrumarmos a base de dados, as linhas devem representar um período de tempo, ao passo em que as colunas representam os valores da variável ao longo do tempo. A base de dados não está estruturada dessa maneira. Por isso, vamos aplicar uma sequência de comandos para gerar uma base de dados "arrumada" para nossa análise.
 
 Vamos focar nossa análise nas séries em nível (número índice) do Brasil e Espírito Santo, pois delas, podemos gerar diversas transformações posteriormente. Os comandos a seguir são cumulativos para gerar nossa base de dados. Copie e cole o comando em um script dentro do Rstudio.
 
@@ -107,13 +116,13 @@ dados_tidy <- dados %>%
 # A base de dados
 ## Arrumando a base de dados
 ```{r}
-glimpse(dados_tidy)
+glimpse(dados_tidy) # Comando para verificar a estrutura dos dados.
 ```
 
 ---
 # A base de dados
 ## Arrumando a base de dados
-Comando para renomeando as variáveis.
+Comando para renomear as variáveis.
 ```{r}
 dados_tidy <- dados_tidy %>% 
   rename(indice_bf = indice_base_fixa_2014_100_numero_indice,
@@ -137,7 +146,7 @@ head(dados_tidy,3)
 ---
 # A base de dados
 ## Arrumando a base de dados
-transformar as informações contidas nas linhas em parte das colunas. Como são duas informações de linha *variavel* e *unidade_territorial* e duas informações de coluna *indica_bf* e *indice_bf_sa*, serão as duas colunas se transformarão em oito.
+Vamos transformar as informações contidas nas linhas em colunas. Como são duas informações em cada linha das colunas variavel e unidade_territorial e duas informações de coluna *indica_bf* e *indice_bf_sa*, serão combinadas com as duas colunas de índices.
 ```{r}
 dados_tidy <- dados_tidy %>% 
   pivot_wider(names_from = c(variavel, unidade_territorial),
@@ -225,7 +234,7 @@ g2 <- ggplot(dados_tidy) +
 ---
 # Os gráficos
 ```{r fig.height=6, fig.width=10}
-g1 + g2
+g1 + g2 # Com o pacote patchwork podemos combinar os gráficos dessa forma.
 ```
 
 
@@ -258,5 +267,5 @@ O objeto criado toma a forma de um vetor e pode ser utilizado independentemente 
 class: center, middle
 
 # Obrigado!
-
+Victor Nunes Toscano
 Slides criados pelo pacote R [**xaringan**](https://github.com/yihui/xaringan).
