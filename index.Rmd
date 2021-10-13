@@ -21,7 +21,7 @@ options(htmltools.dir.version = FALSE)
 
 **Victor Nunes Toscano**
 
-Sou servidor público há mais de 10 anos, sempre trabalhando com a análise de dados.
+Sou servidor público há mais de 10 anos, sempre trabalhando com análise de dados.
 
 Atualmente, estou na Secretaria de Trabalho, Assistência e Desenvolvimento Social (SETADES) e tenho trabalhado com dados sociais e avaliação de políticas públicas.
 ![foto](https://lh5.googleusercontent.com/lk2OeiJqT1X3pAh46hVYibEzmiF5wU3yvJkok7GF5GGalmmwc1RAVLKLuw4zgdh9kfcT42tPUW7PL5PvMLGVihCY-k5XyJvfhIMDphwjCOUj_pa6bxh6r_blrQccwhfS7A=w1280)
