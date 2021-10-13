@@ -60,7 +60,7 @@ Manipular as séries que serão utilizadas na apresentação dos modelos de prev
 # install.packages("readxl")
 
 library(dplyr) # manipulação de base de dados 
-library(tidyr) # ferramenta de faxina de dados
+library(tidyr) # ferramenta para arrumar dados
 library(janitor) # ferramenta para faxina de dados
 library(lubridate) # pacote para lidar com datas
 library(ggplot2) # pacote de visualização
