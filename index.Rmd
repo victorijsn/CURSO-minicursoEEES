@@ -264,11 +264,21 @@ vol_serv_es_sa
 
 ---
 # Objeto de série temporal
-Dica: ao utilizar o pacote *forecast*, vocês têm acesso a função *autoplot()* que facilita a visualização das séries de temporais.
+Dica1: ao utilizar o pacote *forecast*, vocês têm acesso a função *autoplot()* que facilita a visualização das séries de temporais.
 
 ```{r message=FALSE, warning=FALSE, fig.height=5, fig.width=10}
 library(forecast)
 autoplot(vol_serv_es_sa)
+```
+
+---
+# Objeto de série temporal
+Dica2: você pode construir gráficos dinâmicos usando *dygraphs*. Logicamente, funciona apenas na interface web.
+
+```{r message=FALSE, warning=FALSE, fig.height=5, fig.width=10}
+library(dygraphs)
+dygraph(vol_serv_es_sa, main = "Volume de serviços -  Espírito Santo") %>% 
+  dyRangeSelector(dateWindow = c("2012-01-01", "2021-07-01"))
 ```
 
 ---
