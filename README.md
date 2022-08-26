@@ -14,4 +14,4 @@ Faça o download da base de dados [aqui](http://ijsn.es.gov.br/component/attachm
 
 ## Slides
 
-Acompanhe pelos [slides do curso](https://victorijsn.github.io/minicursoEEES/#1).
+Acompanhe pelos [slides do curso](https://victorijsn.github.io/CURSO-minicursoEEES/#1).
